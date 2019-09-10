@@ -1,20 +1,18 @@
 import React from "react";
 import "../css/app.css";
-import Route from "react-router-dom/es/Route";
-import Switch from "react-router-dom/es/Switch"
-import Root from "./Root"
+import EventViewer from "./EventViewer";
+import EventAdmin from "./EventAdmin";
 
-class App extends React.Component {
-  render() {
-    return (
-      <div>
-        <Switch>
-          <Route exact path="/" component={Root} />
-        </Switch>
-      </div>
-    )
-    ;
-  }
-}
+import { Router } from "@reach/router";
+import { Container } from "react-bootstrap";
+
+const App = () => (
+  <Container className="mt-5 text-center">
+    <Router>
+      <EventAdmin path="/events/staff" />
+      <EventViewer path="event/:eventId/:status" />
+    </Router>
+  </Container>
+);
 
 export default App;
