@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack-dev-server --config ./webpack.config.js --mode development --port 5000",
-    "start-dev": "nodemon server/app.js",
+    "startdev": "nodemon server/app.js",
     "start": "node server/app.js",
     "heroku-postbuild": "webpack -p --config ./webpack.config.js --progress"
   },
