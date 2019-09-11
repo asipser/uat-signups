@@ -90,7 +90,7 @@ app.use(function(err, req, res, next) {
   res.status(status).send(err.message || "Something broke!");
 });
 
-http.listen(process.env.port || 3000, () => {
+http.listen(process.env.PORT || 3000, () => {
   console.log(`Listening on port 3000 and looking in folder ${publicPath}`);
 });
 
