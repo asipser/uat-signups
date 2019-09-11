@@ -152,7 +152,7 @@ function handleCreateSignup(socket) {
     await Event.findByIdAndUpdate(eventId, {
       $addToSet: { signups: newSignup._id }
     });
-    io.emit("create-signup", newSignup);
+    io.emit("create-signup", { newSignup, eventId });
   });
 }
 

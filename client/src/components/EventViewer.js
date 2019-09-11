@@ -86,10 +86,13 @@ class EventViewer extends React.Component {
       });
     });
 
-    socket.on("create-signup", newSignup => {
-      this.setState({
-        signups: [...this.state.signups, newSignup]
-      });
+    socket.on("create-signup", ({ newSignup, eventId }) => {
+      console.log(newSignup, eventId);
+      if (eventId === this.props.eventId) {
+        this.setState({
+          signups: [...this.state.signups, newSignup]
+        });
+      }
     });
   }
 

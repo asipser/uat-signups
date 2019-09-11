@@ -8,7 +8,7 @@ import { Router } from "@reach/router";
 import { Container } from "react-bootstrap";
 
 const App = () => (
-  <Container className="mt-5 text-center">
+  <Container className="pt-5 text-center">
     <Router>
       <StudentHome default />
       <EventAdmin path="/events/staff" />
