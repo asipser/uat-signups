@@ -153,16 +153,11 @@ class EventViewer extends React.Component {
   };
 
   render() {
-    const {
-      currentUserName,
-      signups,
-      loading,
-      description,
-      title
-    } = this.state;
+    const { currentUserName, loading, description, title } = this.state;
     const { status } = this.props;
     const isAdmin = status === "staff";
     let nextSignupTime = "";
+    const signups = [...this.state.signups].sort(compareSignups);
     if (signups.length > 0 && !!signups[signups.length - 1].start_time) {
       nextSignupTime = new Date(signups[signups.length - 1].start_time);
       nextSignupTime.setHours(nextSignupTime.getHours() + 1);
@@ -194,9 +189,23 @@ class EventViewer extends React.Component {
                 </InputGroup.Prepend>
                 <FormControl
                   onKeyDown={this._handleKeyDown}
+                  id="name-input"
                   placeholder="Kerberos (without the @mit.edu)"
                   aria-label="Amount (to the nearest dollar)"
                 />
+                <InputGroup.Append>
+                  <Button
+                    onClick={() => {
+                      this.setState({
+                        currentUserName: document.getElementById("name-input")
+                          .value
+                      });
+                    }}
+                    variant="outline-secondary"
+                  >
+                    Submit
+                  </Button>
+                </InputGroup.Append>
               </InputGroup>
             ) : (
               <h2>
@@ -238,6 +247,19 @@ class EventViewer extends React.Component {
       </div>
     );
   }
+}
+
+function compareSignups(signup1, signup2) {
+  const date1 = signup1.start_time ? new Date(signup1.start_time) : new Date();
+  const date2 = signup2.start_time ? new Date(signup2.start_time) : new Date();
+
+  let comparison = 0;
+  if (date1 > date2) {
+    comparison = 1;
+  } else if (date1 < date2) {
+    comparison = -1;
+  }
+  return comparison;
 }
 
 export default EventViewer;

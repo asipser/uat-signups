@@ -68,9 +68,9 @@ class EventAdmin extends Component {
   };
 
   copyText = eventId => {
-    let url = `http://${document.domain}`;
+    let url = `${location.protocol}//${document.domain}`;
     url += location.port ? `:${location.port}` : "";
-    url += `/event/${eventId}/student`;
+    url += `/event/${eventId}`;
     copyToClipboard(url);
     document.getElementById(eventId + "-button").innerHTML = "Copied!";
     setTimeout(() => {
@@ -133,7 +133,7 @@ class EventAdmin extends Component {
             <tbody>
               {this.state.events.map((event, index) => (
                 <tr key={index}>
-                  <td>index</td>
+                  <td>{index}</td>
                   <td>
                     {event.signups
                       .map(signup => signup.students)

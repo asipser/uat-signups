@@ -9,7 +9,9 @@ import {
   Col,
   FormControl,
   Modal,
-  Form
+  Form,
+  OverlayTrigger,
+  Tooltip
 } from "react-bootstrap";
 import { FaEdit, FaTrash, FaCopy, FaEyeSlash, FaEye } from "react-icons/fa";
 
@@ -53,7 +55,7 @@ class Signup extends Component {
     const { editing } = this.state;
     const studentNames = new Set(students);
     const eventCapacity =
-      students.length == maxSignups
+      students.length >= maxSignups
         ? "full"
         : students.length >= maxSignups / 2
         ? "partial"
@@ -125,18 +127,16 @@ class Signup extends Component {
                       {studentNames.has(currentStudentName) ? (
                         <Button
                           variant="danger"
-                          disabled={locked || currentStudentName === ""}
                           onClick={() => leave(currentStudentName, id)}
                         >
                           Leave
                         </Button>
                       ) : (
-                        <Button
-                          disabled={locked || currentStudentName === ""}
-                          onClick={() => join(currentStudentName, id)}
-                        >
-                          Join
-                        </Button>
+                        <JoinButton
+                          isFull={eventCapacity === "full"}
+                          hasEnteredName={currentStudentName !== ""}
+                          joinSignup={() => join(currentStudentName, id)}
+                        />
                       )}
                     </Col>
                   )}
@@ -281,4 +281,28 @@ export const SignupModal = props => {
       </Modal.Footer>
     </Modal>
   );
+};
+
+const JoinButton = ({ hasEnteredName, isFull, joinSignup }) => {
+  if (isFull) {
+    return <span className="text-danger">Signup Full</span>;
+  } else if (!hasEnteredName) {
+    return (
+      <OverlayTrigger
+        overlay={
+          <Tooltip id="tooltip-disabled">
+            Enter a name to join a section!
+          </Tooltip>
+        }
+      >
+        <span className="d-inline-block">
+          <Button disabled style={{ pointerEvents: "none" }}>
+            Join
+          </Button>
+        </span>
+      </OverlayTrigger>
+    );
+  } else {
+    return <Button onClick={joinSignup}>Join</Button>;
+  }
 };
