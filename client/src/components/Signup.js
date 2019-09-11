@@ -270,7 +270,7 @@ export const SignupModal = props => {
                 props.id,
                 document.getElementById("max").value,
                 document.getElementById("ta").value,
-                document.getElementById("start").value,
+                new Date(document.getElementById("start").value).toISOString(),
                 document.getElementById("description").value,
                 props.visible
               );
@@ -278,7 +278,7 @@ export const SignupModal = props => {
               props.create(
                 document.getElementById("max").value,
                 document.getElementById("ta").value,
-                document.getElementById("start").value,
+                new Date(document.getElementById("start").value).toISOString(),
                 document.getElementById("description").value
               );
             }
