@@ -121,62 +121,65 @@ class EventAdmin extends Component {
           loading={this.state.loading}
         />
         {!this.state.loading && (
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th># Total Students Registered</th>
-                <th>Staff Link</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.events.map((event, index) => (
-                <tr key={index}>
-                  <td>{index}</td>
-                  <td>
-                    {event.signups
-                      .map(signup => signup.students)
-                      .reduce((prev, curr) => {
-                        return prev + curr.length;
-                      }, 0)}
-                  </td>
-                  <td>
-                    <Link to={`/event/${event._id}/staff`}>
-                      {event.title || "Event"}
-                    </Link>
-                  </td>
-                  <td>
-                    <FaCopy
-                      className="pointer mr-3"
-                      size={24}
-                      onClick={() => this.duplicate(event._id)}
-                    />
-                    <FaEdit
-                      className="pointer mr-3"
-                      size={24}
-                      onClick={() => this.showModal(event._id)}
-                    />
-                    <FaTrash
-                      className="pointer mr-3"
-                      size={24}
-                      onClick={() => this.delete(event._id)}
-                    />
-                    <button
-                      id={event._id + "-button"}
-                      onClick={() => this.copyText(event._id)}
-                    >
-                      Copy Student Link To Clipboard
-                    </button>
-                  </td>
+          <div>
+            <h1>6.UAT Signup Portal Staff Home</h1>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th># Total Students Registered</th>
+                  <th>Staff Link</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {this.state.events.map((event, index) => (
+                  <tr key={index}>
+                    <td>{index}</td>
+                    <td>
+                      {event.signups
+                        .map(signup => signup.students)
+                        .reduce((prev, curr) => {
+                          return prev + curr.length;
+                        }, 0)}
+                    </td>
+                    <td>
+                      <Link to={`/event/${event._id}/staff`}>
+                        {event.title || "Event"}
+                      </Link>
+                    </td>
+                    <td>
+                      <FaCopy
+                        className="pointer mr-3"
+                        size={24}
+                        onClick={() => this.duplicate(event._id)}
+                      />
+                      <FaEdit
+                        className="pointer mr-3"
+                        size={24}
+                        onClick={() => this.showModal(event._id)}
+                      />
+                      <FaTrash
+                        className="pointer mr-3"
+                        size={24}
+                        onClick={() => this.delete(event._id)}
+                      />
+                      <button
+                        id={event._id + "-button"}
+                        onClick={() => this.copyText(event._id)}
+                      >
+                        Copy Student Link To Clipboard
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+            <Button className="mt-3 w-100" onClick={() => this.showModal()}>
+              Add Event
+            </Button>
+          </div>
         )}
-        <Button className="mt-3 w-100" onClick={() => this.showModal()}>
-          Add Event
-        </Button>
 
         <EventModal
           show={this.state.showModal}
