@@ -112,7 +112,9 @@ class EventViewer extends React.Component {
   };
 
   deleteSignup = signupKey => {
-    socket.emit("delete_signup", { _id: signupKey }, this.props.eventId);
+    if (confirm("Are you sure you want to delete this signup?")) {
+      socket.emit("delete_signup", { _id: signupKey }, this.props.eventId);
+    }
   };
 
   update = (

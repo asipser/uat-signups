@@ -6,7 +6,9 @@ import {
   FormControl,
   Modal,
   Form,
-  Table
+  Table,
+  OverlayTrigger,
+  Tooltip
 } from "react-bootstrap";
 import { FaEdit, FaTrash, FaCopy } from "react-icons/fa";
 
@@ -45,7 +47,9 @@ class EventAdmin extends Component {
   };
 
   delete = id => {
-    socket.emit("delete_event", id);
+    if (confirm("Are you sure you want to delete this event?")) {
+      socket.emit("delete_event", id);
+    }
   };
 
   duplicate = id => {
@@ -149,21 +153,30 @@ class EventAdmin extends Component {
                       </Link>
                     </td>
                     <td>
-                      <FaCopy
-                        className="pointer mr-3"
-                        size={24}
-                        onClick={() => this.duplicate(event._id)}
-                      />
-                      <FaEdit
-                        className="pointer mr-3"
-                        size={24}
-                        onClick={() => this.showModal(event._id)}
-                      />
-                      <FaTrash
-                        className="pointer mr-3"
-                        size={24}
-                        onClick={() => this.delete(event._id)}
-                      />
+                      {wrapTooltip(
+                        "Duplicate Event",
+                        <FaCopy
+                          className="pointer mr-3"
+                          size={24}
+                          onClick={() => this.duplicate(event._id)}
+                        />
+                      )}
+                      {wrapTooltip(
+                        "Edit Event",
+                        <FaEdit
+                          className="pointer mr-3"
+                          size={24}
+                          onClick={() => this.showModal(event._id)}
+                        />
+                      )}
+                      {wrapTooltip(
+                        "Delete Event",
+                        <FaTrash
+                          className="pointer mr-3"
+                          size={24}
+                          onClick={() => this.delete(event._id)}
+                        />
+                      )}
                       <button
                         id={event._id + "-button"}
                         onClick={() => this.copyText(event._id)}
@@ -267,4 +280,10 @@ function copyToClipboard(text) {
   dummy.select();
   document.execCommand("copy");
   document.body.removeChild(dummy);
+}
+
+function wrapTooltip(text, icon) {
+  return (
+    <OverlayTrigger overlay={<Tooltip>{text}</Tooltip>}>{icon}</OverlayTrigger>
+  );
 }

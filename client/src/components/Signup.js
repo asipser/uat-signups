@@ -99,25 +99,34 @@ class Signup extends Component {
                       <Container>
                         <Row>
                           <Col>
-                            <FaEdit
-                              className="pointer"
-                              size={24}
-                              onClick={() => this.setState({ editing: true })}
-                            />
+                            {wrapTooltip(
+                              "Edit Signup",
+                              <FaEdit
+                                className="pointer"
+                                size={24}
+                                onClick={() => this.setState({ editing: true })}
+                              />
+                            )}
                           </Col>
                           <Col>
-                            <FaTrash
-                              className="pointer"
-                              size={24}
-                              onClick={() => remove(id)}
-                            />
+                            {wrapTooltip(
+                              "Delete Signup",
+                              <FaTrash
+                                className="pointer"
+                                size={24}
+                                onClick={() => remove(id)}
+                              />
+                            )}
                           </Col>
                           <Col>
-                            <FaCopy
-                              className="pointer"
-                              size={24}
-                              onClick={() => duplicate(id)}
-                            />
+                            {wrapTooltip(
+                              "Duplicate Signup",
+                              <FaCopy
+                                className="pointer"
+                                size={24}
+                                onClick={() => duplicate(id)}
+                              />
+                            )}
                           </Col>
                         </Row>
                       </Container>
@@ -306,3 +315,9 @@ const JoinButton = ({ hasEnteredName, isFull, joinSignup }) => {
     return <Button onClick={joinSignup}>Join</Button>;
   }
 };
+
+function wrapTooltip(text, icon) {
+  return (
+    <OverlayTrigger overlay={<Tooltip>{text}</Tooltip>}>{icon}</OverlayTrigger>
+  );
+}
