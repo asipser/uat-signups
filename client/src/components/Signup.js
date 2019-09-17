@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { DateTime } from "luxon";
+let x;
 import {
   Accordion,
   Card,
@@ -61,14 +63,23 @@ class Signup extends Component {
         ? "partial"
         : "open";
 
+    console.log(
+      DateTime.fromISO(time, {
+        zone: "America/New_York"
+      })
+    );
+
     const signupTime =
       time && time.length > 0
-        ? new Date(time).toLocaleString("en-US", {
-            weekday: "long",
-            month: "numeric",
+        ? DateTime.fromISO(time, {
+            zone: "America/New_York"
+          }).toLocaleString({
+            weekday: "short",
+            month: "short",
             day: "numeric",
             hour: "2-digit",
-            minute: "2-digit"
+            minute: "2-digit",
+            hour12: true
           })
         : "";
     return (
@@ -210,9 +221,12 @@ export default Signup;
 export const SignupModal = props => {
   let dateString = "";
   if (props.time) {
-    dateString = new Date(props.time);
-    dateString.setHours(dateString.getHours() - 4);
-    dateString = dateString.toISOString().slice(0, -5);
+    dateString = DateTime.fromISO(props.time, {
+      zone: "America/New_York"
+    }).toISO({
+      suppressMilliseconds: true,
+      includeOffset: false
+    });
   }
   return (
     <Modal
@@ -265,12 +279,18 @@ export const SignupModal = props => {
         <Button
           variant="primary"
           onClick={() => {
+            const startTimeISO = DateTime.fromFormat(
+              document.getElementById("start").value,
+              "yyyy-MM-ddTHH:mm:ss",
+              { zone: "America/New_York" }
+            ).toISO();
+            console.log(startTimeISO);
             if (props.mode === "edit") {
               props.update(
                 props.id,
                 document.getElementById("max").value,
                 document.getElementById("ta").value,
-                new Date(document.getElementById("start").value).toISOString(),
+                startTimeISO,
                 document.getElementById("description").value,
                 props.visible
               );
@@ -278,7 +298,7 @@ export const SignupModal = props => {
               props.create(
                 document.getElementById("max").value,
                 document.getElementById("ta").value,
-                new Date(document.getElementById("start").value).toISOString(),
+                startTimeISO,
                 document.getElementById("description").value
               );
             }

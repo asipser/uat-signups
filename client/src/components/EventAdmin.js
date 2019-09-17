@@ -76,7 +76,8 @@ class EventAdmin extends Component {
     url += location.port ? `:${location.port}` : "";
     url += `/event/${eventId}`;
     copyToClipboard(url);
-    document.getElementById(eventId + "-button").innerHTML = "Copied!";
+    document.getElementById(eventId + "-button").innerHTML =
+      "Copied Student Link to Clipboard!";
     setTimeout(() => {
       document.getElementById(eventId + "-button").innerHTML =
         "Copy Student Link To Clipboard";

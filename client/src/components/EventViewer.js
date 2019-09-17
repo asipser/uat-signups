@@ -2,6 +2,7 @@ import React from "react";
 import "../css/app.css";
 import Signup, { SignupModal } from "./Signup";
 import { FormControl, InputGroup, Button } from "react-bootstrap";
+import { DateTime } from "luxon";
 
 import socketIOClient from "socket.io-client";
 let socket;
@@ -164,9 +165,17 @@ class EventViewer extends React.Component {
     let nextSignupTime = "";
     const signups = [...this.state.signups].sort(compareSignups);
     if (signups.length > 0 && !!signups[signups.length - 1].start_time) {
-      nextSignupTime = new Date(signups[signups.length - 1].start_time);
-      nextSignupTime.setHours(nextSignupTime.getHours() + 1);
-      nextSignupTime = nextSignupTime.toISOString();
+      nextSignupTime = DateTime.fromISO(
+        signups[signups.length - 1].start_time,
+        {
+          zone: "America/New_York"
+        }
+      );
+      nextSignupTime = nextSignupTime.plus({ hours: 1 });
+      nextSignupTime = nextSignupTime.toISO({
+        suppressMilliseconds: true,
+        includeOffset: false
+      });
     }
 
     if (loading) {
