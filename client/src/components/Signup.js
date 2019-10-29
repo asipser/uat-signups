@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { DateTime } from "luxon";
-let x;
 import {
   Accordion,
   Card,
@@ -279,12 +278,12 @@ export const SignupModal = props => {
         <Button
           variant="primary"
           onClick={() => {
+            const startTimeStr = document.getElementById("start").value;
             const startTimeISO = DateTime.fromFormat(
-              document.getElementById("start").value,
-              "yyyy-MM-ddTHH:mm:ss",
+              startTimeStr,
+              "yyyy-MM-ddTHH:mm",
               { zone: "America/New_York" }
             ).toISO();
-            console.log(startTimeISO);
             if (props.mode === "edit") {
               props.update(
                 props.id,

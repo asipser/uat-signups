@@ -15,6 +15,9 @@ const io = require("socket.io")(http);
 const Signup = require("./models/Signup");
 const Event = require("./models/Event");
 
+const prodDbName = "dev"; //yes this is a hack, but need to dev on a different db
+const devDbName = "dev-actual";
+
 // set POST request body parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -26,7 +29,7 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
-    dbName: "dev"
+    dbName: process.env.NODE_ENV === "production" ? prodDbName : devDbName
   })
   .then(
     () => console.log("Connected to MongoDB"),
