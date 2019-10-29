@@ -1,8 +1,8 @@
 {
-  "name": "react-skeleton",
+  "name": "uat-signups",
   "version": "1.0.0",
-  "description": "a skeleton for starting a react project with webpack and babel",
-  "repository": "https://github.com/mit6148-workshops/react-skeleton",
+  "description": "signup page for uat signups",
+  "repository": "https://github.com/asipser/uat-signups",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -64,5 +64,9 @@
     "webpack-dev-middleware": "^3.5.0",
     "webpack-dev-server": "^3.1.14",
     "webpack-hot-middleware": "^2.24.3"
+  },
+  "engines": {
+    "node": ">=10.15.0",
+    "npm": ">=6.4.0"
   }
 }
