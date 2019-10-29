@@ -174,9 +174,12 @@ class EventViewer extends React.Component {
       nextSignupTime = nextSignupTime.plus({ hours: 1 });
       nextSignupTime = nextSignupTime.toISO({
         suppressMilliseconds: true,
+        suppressSeconds: true,
         includeOffset: false
       });
     }
+
+    console.log(nextSignupTime);
 
     if (loading) {
       return <div> Loading! </div>;

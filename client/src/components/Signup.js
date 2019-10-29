@@ -97,7 +97,7 @@ class Signup extends Component {
                               {students.length} / {maxSignups}
                             </div>
                           </Col>
-                          {!!signupTime && <Col>{signupTime}</Col>}
+                          {!!signupTime && <Col xs={4}>{signupTime}</Col>}
                           {!!ta && <Col>{ta}</Col>}
                           {!!description && <Col>{description}</Col>}
                         </Row>
@@ -224,6 +224,7 @@ export const SignupModal = props => {
       zone: "America/New_York"
     }).toISO({
       suppressMilliseconds: true,
+      suppressSeconds: true,
       includeOffset: false
     });
   }
@@ -279,6 +280,7 @@ export const SignupModal = props => {
           variant="primary"
           onClick={() => {
             const startTimeStr = document.getElementById("start").value;
+            console.log(startTimeStr);
             const startTimeISO = DateTime.fromFormat(
               startTimeStr,
               "yyyy-MM-ddTHH:mm",
