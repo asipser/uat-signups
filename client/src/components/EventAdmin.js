@@ -8,7 +8,9 @@ import {
   Form,
   Table,
   OverlayTrigger,
-  Tooltip
+  Tooltip,
+  DropdownButton,
+  Dropdown
 } from "react-bootstrap";
 import { FaEdit, FaTrash, FaCopy } from "react-icons/fa";
 
@@ -28,19 +30,21 @@ class EventAdmin extends Component {
     };
   }
 
-  upsert = (title, description, id) => {
+  upsert = (title, description, sortby, id) => {
     const { events } = this.state;
     let event;
     if (id) {
       const oldEvent = events[events.findIndex(e => e._id === id)];
       oldEvent.title = title;
       oldEvent.description = description;
+      oldEvent.sortby = sortby;
       event = oldEvent;
     } else {
       event = {
         title: title,
         description: description,
-        signups: []
+        signups: [],
+        sortby: sortby
       };
     }
     socket.emit("upsert_event", event);
@@ -95,6 +99,7 @@ class EventAdmin extends Component {
     });
 
     socket.on("upsert-event", newEvent => {
+      console.log(newEvent);
       const { events } = this.state;
       if (events.findIndex(e => e._id === newEvent._id) !== -1) {
         this.setState({
@@ -206,6 +211,9 @@ class EventAdmin extends Component {
           eventId={
             this.state.selectedEvent ? this.state.selectedEvent._id : undefined
           }
+          sortby={
+            this.state.selectedEvent ? this.state.selectedEvent.sortby : "date"
+          }
           onHide={() =>
             this.setState({ showModal: false, selectedEvent: null })
           }
@@ -247,6 +255,14 @@ export const EventModal = props => {
             placeholder="Event Description"
           />
         </Form.Group>
+        <Form.Group>
+          <Form.Label>Sort By</Form.Label>
+          <Form.Control id="sortby" as="select" defaultValue={props.sortby}>
+            <option>date</option>
+            <option>description</option>
+            <option>ta</option>
+          </Form.Control>
+        </Form.Group>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={props.onHide}>
@@ -258,6 +274,7 @@ export const EventModal = props => {
             props.upsert(
               document.getElementById("title").value,
               document.getElementById("description").value,
+              document.getElementById("sortby").value.toLowerCase(),
               props.eventId
             );
             props.onHide();

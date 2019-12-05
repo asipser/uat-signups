@@ -14,7 +14,7 @@ import {
   OverlayTrigger,
   Tooltip
 } from "react-bootstrap";
-import { FaEdit, FaTrash, FaCopy, FaEyeSlash, FaEye } from "react-icons/fa";
+import { FaEdit, FaTrash, FaCopy, FaMailBulk } from "react-icons/fa";
 
 /**
  * @augments {Component<{  admin:boolean,  id:string,  currentStudentName:string.isRequired,  locked:boolean.isRequired,  students:array,  maxSignups:number.isRequired,  ta:string,  time:string,  description:string,  join:Function.isRequired,  leave:Function.isRequired,  update:Function.isRequired,  duration:number>}
@@ -24,6 +24,11 @@ class Signup extends Component {
     super(props);
     this.state = { editing: false };
   }
+
+  generateEmail = () => {
+    const mailto = this.props.students.map(s => `${s}@mit.edu`).join(",");
+    window.open(`mailto:${mailto}`);
+  };
 
   componentDidMount() {}
 
@@ -54,19 +59,13 @@ class Signup extends Component {
       id
     } = this.props;
     const { editing } = this.state;
-    const studentNames = new Set(students);
+    const studentNames = new Set(students.map(s => s.toLowerCase()));
     const eventCapacity =
       students.length >= maxSignups
         ? "full"
         : students.length >= maxSignups / 2
         ? "partial"
         : "open";
-
-    console.log(
-      DateTime.fromISO(time, {
-        zone: "America/New_York"
-      })
-    );
 
     const signupTime =
       time && time.length > 0
@@ -138,12 +137,22 @@ class Signup extends Component {
                               />
                             )}
                           </Col>
+                          <Col>
+                            {wrapTooltip(
+                              "Generate Email to Students",
+                              <FaMailBulk
+                                className="pointer"
+                                size={24}
+                                onClick={this.generateEmail}
+                              />
+                            )}
+                          </Col>
                         </Row>
                       </Container>
                     </Col>
                   ) : (
                     <Col>
-                      {studentNames.has(currentStudentName) ? (
+                      {studentNames.has(currentStudentName.toLowerCase()) ? (
                         <Button
                           variant="danger"
                           onClick={() => leave(currentStudentName, id)}
@@ -153,6 +162,7 @@ class Signup extends Component {
                       ) : (
                         <JoinButton
                           isFull={eventCapacity === "full"}
+                          locked={locked}
                           hasEnteredName={currentStudentName !== ""}
                           joinSignup={() => join(currentStudentName, id)}
                         />
@@ -313,7 +323,7 @@ export const SignupModal = props => {
   );
 };
 
-const JoinButton = ({ hasEnteredName, isFull, joinSignup }) => {
+const JoinButton = ({ hasEnteredName, isFull, joinSignup, locked }) => {
   if (isFull) {
     return <span className="text-danger">Signup Full</span>;
   } else if (!hasEnteredName) {
@@ -322,6 +332,22 @@ const JoinButton = ({ hasEnteredName, isFull, joinSignup }) => {
         overlay={
           <Tooltip id="tooltip-disabled">
             Enter a name to join a section!
+          </Tooltip>
+        }
+      >
+        <span className="d-inline-block">
+          <Button disabled style={{ pointerEvents: "none" }}>
+            Join
+          </Button>
+        </span>
+      </OverlayTrigger>
+    );
+  } else if (locked) {
+    return (
+      <OverlayTrigger
+        overlay={
+          <Tooltip id="tooltip-disabled">
+            Leave your other section to join this section!
           </Tooltip>
         }
       >

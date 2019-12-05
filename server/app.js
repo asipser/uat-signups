@@ -163,9 +163,8 @@ function handleCreateEvent(socket) {
   socket.on("upsert_event", async data => {
     let newEvent;
     if (data._id) {
-      console.log(data);
-      const newData = await Event.findByIdAndUpdate(data._id, data);
-      io.emit("upsert-event", data);
+      await Event.findByIdAndUpdate(data._id, data);
+      newEvent = data;
     } else {
       newEvent = await Event.create(data);
     }

@@ -16,13 +16,14 @@ class EventViewer extends React.Component {
       creatingSignup: false,
       signups: [],
       title: "",
-      description: ""
+      description: "",
+      sortby: ""
     };
   }
 
   _handleKeyDown = e => {
     if (e.key === "Enter") {
-      this.setState({ currentUserName: e.target.value });
+      this.setState({ currentUserName: e.target.value.toLowerCase() });
     }
   };
 
@@ -36,7 +37,8 @@ class EventViewer extends React.Component {
         signups: event.signups,
         title: event.title,
         description: event.description,
-        loading: false
+        loading: false,
+        sortby: event.sortby ? event.sortby : "date"
       });
     });
 
@@ -159,11 +161,31 @@ class EventViewer extends React.Component {
   };
 
   render() {
-    const { currentUserName, loading, description, title } = this.state;
+    const { currentUserName, loading, description, title, sortby } = this.state;
+
+    if (loading) {
+      return <div> Loading! </div>;
+    }
+
     const { status } = this.props;
     const isAdmin = status === "staff";
     let nextSignupTime = "";
-    const signups = [...this.state.signups].sort(compareSignups);
+    let signups = [...this.state.signups];
+    if (sortby == "description") {
+      signups.sort(compareSignupsByDescription);
+    } else if (sortby == "ta") {
+      signups.sort(compareSignupsByTA);
+    } else {
+      signups.sort(compareSignupsByDate);
+    }
+
+    let registeredSection = -1;
+    for (let i = 0; i < signups.length; i++) {
+      const sectionStudents = signups[i].students.map(s => s.toLowerCase());
+      if (sectionStudents.includes(currentUserName.toLowerCase())) {
+        registeredSection = i;
+      }
+    }
     if (signups.length > 0 && !!signups[signups.length - 1].start_time) {
       nextSignupTime = DateTime.fromISO(
         signups[signups.length - 1].start_time,
@@ -177,12 +199,6 @@ class EventViewer extends React.Component {
         suppressSeconds: true,
         includeOffset: false
       });
-    }
-
-    console.log(nextSignupTime);
-
-    if (loading) {
-      return <div> Loading! </div>;
     }
 
     return (
@@ -214,8 +230,9 @@ class EventViewer extends React.Component {
                   <Button
                     onClick={() => {
                       this.setState({
-                        currentUserName: document.getElementById("name-input")
-                          .value
+                        currentUserName: document
+                          .getElementById("name-input")
+                          .value.toLowerCase()
                       });
                     }}
                     variant="outline-secondary"
@@ -226,19 +243,21 @@ class EventViewer extends React.Component {
               </InputGroup>
             ) : (
               <h2>
-                Welcome <i className="">{currentUserName}</i>
+                Welcome <i>{currentUserName}</i>.
               </h2>
             )}
           </div>
         )}
-        {signups.map(signup => {
+        {signups.map((signup, signupIndex) => {
           return (
             <Signup
               id={signup._id}
-              key={signup._id}
-              students={signup.students}
+              key={signupIndex}
+              students={signup.students.map(s => s.toLowerCase())}
               maxSignups={signup.max_signups}
-              locked={false}
+              locked={
+                registeredSection >= 0 && registeredSection != signupIndex
+              }
               ta={signup.ta}
               time={signup.start_time}
               description={signup.description}
@@ -247,7 +266,7 @@ class EventViewer extends React.Component {
               update={this.update}
               remove={this.deleteSignup}
               duplicate={this.duplicate}
-              currentStudentName={currentUserName}
+              currentStudentName={currentUserName.toLowerCase()}
               admin={isAdmin}
             />
           );
@@ -266,7 +285,33 @@ class EventViewer extends React.Component {
   }
 }
 
-function compareSignups(signup1, signup2) {
+function compareSignupsByTA(signup1, signup2) {
+  const date1 = signup1.ta;
+  const date2 = signup2.ta;
+
+  let comparison = 0;
+  if (date1 > date2) {
+    comparison = 1;
+  } else if (date1 < date2) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
+function compareSignupsByDescription(signup1, signup2) {
+  const date1 = signup1.description;
+  const date2 = signup2.description;
+
+  let comparison = 0;
+  if (date1 > date2) {
+    comparison = 1;
+  } else if (date1 < date2) {
+    comparison = -1;
+  }
+  return comparison;
+}
+
+function compareSignupsByDate(signup1, signup2) {
   const date1 = signup1.start_time ? new Date(signup1.start_time) : new Date();
   const date2 = signup2.start_time ? new Date(signup2.start_time) : new Date();
 
