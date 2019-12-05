@@ -23,7 +23,9 @@ class EventViewer extends React.Component {
 
   _handleKeyDown = e => {
     if (e.key === "Enter") {
-      this.setState({ currentUserName: e.target.value.toLowerCase() });
+      this.setState({
+        currentUserName: e.target.value.toLowerCase().replace(/\s/g, "")
+      });
     }
   };
 
@@ -181,8 +183,14 @@ class EventViewer extends React.Component {
 
     let registeredSection = -1;
     for (let i = 0; i < signups.length; i++) {
-      const sectionStudents = signups[i].students.map(s => s.toLowerCase());
-      if (sectionStudents.includes(currentUserName.toLowerCase())) {
+      const sectionStudents = signups[i].students.map(s =>
+        s.toLowerCase().replace(/\s/g, "")
+      );
+      if (
+        sectionStudents.includes(
+          currentUserName.toLowerCase().replace(/\s/g, "")
+        )
+      ) {
         registeredSection = i;
       }
     }
@@ -233,6 +241,7 @@ class EventViewer extends React.Component {
                         currentUserName: document
                           .getElementById("name-input")
                           .value.toLowerCase()
+                          .replace(/\s/g, "")
                       });
                     }}
                     variant="outline-secondary"
@@ -253,7 +262,9 @@ class EventViewer extends React.Component {
             <Signup
               id={signup._id}
               key={signupIndex}
-              students={signup.students.map(s => s.toLowerCase())}
+              students={signup.students.map(s =>
+                s.toLowerCase().replace(/\s/g, "")
+              )}
               maxSignups={signup.max_signups}
               locked={
                 registeredSection >= 0 && registeredSection != signupIndex
@@ -266,7 +277,9 @@ class EventViewer extends React.Component {
               update={this.update}
               remove={this.deleteSignup}
               duplicate={this.duplicate}
-              currentStudentName={currentUserName.toLowerCase()}
+              currentStudentName={currentUserName
+                .toLowerCase()
+                .replace(/\s/g, "")}
               admin={isAdmin}
             />
           );
