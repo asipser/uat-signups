@@ -15,8 +15,10 @@ const io = require("socket.io")(http);
 const Signup = require("./models/Signup");
 const Event = require("./models/Event");
 
-const prodDbName = "dev"; //yes this is a hack, but need to dev on a different db
-const devDbName = "dev-actual";
+const MONGO_SRV =
+  "mongodb+srv://class:ihVP3K0zN2nhYJGb@cluster0-crlmv.mongodb.net/test?retryWrites=true&w=majority";
+const prodDbName = "prod";
+const devDbName = "dev";
 
 // set POST request body parser
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -25,7 +27,7 @@ app.use(bodyParser.json());
 const publicPath = path.resolve(__dirname, "..", "client", "dist");
 
 mongoose
-  .connect(process.env.MONGO_SRV, {
+  .connect(MONGO_SRV, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
