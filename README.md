@@ -32,14 +32,14 @@ Both of these services are **free**. If at any point they no longer are free you
 
 1. Clone the repo
 2. run `npm install`
-3. Open two terminals.
-   a. In one terminal run `npm start`, this starts the Node server.
+3. Open two terminals.\
+   a. In one terminal run `npm start`, this starts the Node server.\
    b. In the other, run `npm run dev`, this starts the [React Hotloader Dev Server](https://github.com/gaearon/react-hot-loader). At a high level this simply runs a server which re-webpacks your frontend code everytime you change it so you will be able to see updates you make on the fly.
 4. Connect to the website on `localhost:5000`.
 
 #### FAQ
 
-_Q: Why can't I see the data that is on the deployed website?_
+_Q: Why can't I see the data that is on the deployed website?_\
 A: In `app.js` you will see that based off the environment variable `NODE_ENV` you will either connect to a database dedicated to development environments, or a database dedicated for production data. So, when in dev feel free to create/delete any signups or events with impunity.
 
 ## How to deploy
