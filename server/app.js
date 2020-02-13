@@ -15,12 +15,9 @@ const io = require("socket.io")(http);
 const Signup = require("./models/Signup");
 const Event = require("./models/Event");
 
-const NEW_MONGO_SRV =
-  "mongodb+srv://class:ihVP3K0zN2nhYJGb@cluster0-crlmv.mongodb.net/test?retryWrites=true&w=majority";
 const MONGO_SRV =
-  "mongodb+srv://uat:A5WcT4KLr8oLepNR@cluster0-wgprz.mongodb.net/test?retryWrites=true&w=majority";
-const prodDbName = "dev";
-const newProdDbName = "prod";
+  "mongodb+srv://class:ihVP3K0zN2nhYJGb@cluster0-crlmv.mongodb.net/test?retryWrites=true&w=majority";
+const prodDbName = "prod";
 const devDbName = "dev";
 
 // set POST request body parser
